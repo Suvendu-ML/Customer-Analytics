@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title }}</title>
+  <script src='static/Chart.min.js'></script>
+  <style>
+  
+   section {
+   float: left;
+   width: 30%;
+   height :30%
+   
+   }
+   aside {
+   float: right;
+   width: 30%;
+   height :30%
+   }
+  </style>
+</head>
+
+<body>
+  <center>
+    <h1>{{ title }}</h1>
+  </center>
+    <section><b>Delay of Payment -Invoice No/Delay in days</b></code>
+    <canvas id="chart" width="150" height="150"></canvas></section>
+    <aside><code><b>Delay of Payment -Invoice No/Delay in %</b></code>
+    <canvas id="piechart" width="150" height="150"></canvas></aside>
+    <aside><code><b>Delay of Payment -Invoice Amount </b></code>
+    <canvas id="horchart" width="150" height="150"></canvas></aside>
+    <script>
+      // bar chart data
+      var barData = {
+        labels : [{% for item in labels %}
+                     
+           "{{ item }}",
+          {% endfor %}],
+          
+        datasets : [{
+            fill: true,
+            lineTension: 0.7,
+            backgroundColor:["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9"],
+            borderColor: "rgba(75,192,192,7)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 5,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+          data : [{% for item in values %}
+              
+               {{ item }}
+              {% endfor %}]}]
+      }
+      
+      options = {
+         legend: { display: false },
+         scales: {
+          xAxes: [{
+            barPercentage: 0.5,
+            barThickness: 20,
+            maxBarThickness: 8,
+            minBarLength: 2,
+            gridLines: {
+            offsetGridLines: true
+            }
+          }]
+         }
+        };
+     // get bar chart canvas
+     var ctx = document.getElementById("chart").getContext("2d");
+       steps = 10
+       max = {{max}}
+     // draw bar chart
+       var myBarChart = new Chart(ctx, {
+           type: 'bar',
+           data: barData,
+           options: options
+           }); 
+             
+    </script>
+    
+    
+    
+    <script>
+      // bar chart data
+      var pieData = {
+        labels : [{% for item in per_labels %}
+           "{{ item }}",
+          {% endfor %}],
+          
+        datasets : [{
+            fill: true,
+            lineTension: 0.7,
+            backgroundColor:["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9"],
+            borderColor: "rgba(75,192,192,7)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 5,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+          data : [{% for item in per_values %}
+                  console.log(parseFloat(item).toFixed(2)+"%");
+               {{item}},
+              {% endfor %}]}]
+      }
+      
+      options = {
+         
+          };
+     // get bar chart canvas
+     var ctx = document.getElementById("piechart").getContext("2d");
+       steps = 10
+       max = {{max}}
+     // draw bar chart
+       var myBarChart = new Chart(ctx, {
+           type: 'pie',
+           data: pieData,
+           options: options
+           }); 
+             
+    </script>
+    
+    
+    
+    <script>
+      // bar chart data
+      var horData = {
+        labels : [{% for item in labels %}
+           "{{ item }}",
+          {% endfor %}],
+          
+        datasets : [{
+            fill: true,
+            lineTension: 0.7,
+            label: "Invoice Amount(millions)",
+            backgroundColor:["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9"],
+            borderColor: "rgba(75,192,192,7)",
+            borderCapStyle: 'butt',
+            borderDash: [],
+            borderDashOffset: 0.0,
+            borderJoinStyle: 'miter',
+            pointBorderColor: "rgba(75,192,192,1)",
+            pointBackgroundColor: "#fff",
+            pointBorderWidth: 5,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: "rgba(75,192,192,1)",
+            pointHoverBorderColor: "rgba(220,220,220,1)",
+            pointHoverBorderWidth: 2,
+            pointRadius: 1,
+            pointHitRadius: 10,
+          data : [{% for item in invoice_value %}
+               {{ item }},
+              {% endfor %}]}]
+      }
+      
+      options = {
+         legend: { display: false },
+         title: {
+         display: true,
+         text: 'Predicted Delay of Invoice Amount (in millions)'
+      }
+          };
+     // get bar chart canvas
+     var ctx = document.getElementById("horchart").getContext("2d");
+       steps = 10
+       max = {{max}}
+     // draw bar chart
+       var myBarChart = new Chart(ctx, {
+           type: 'horizontalBar',
+           data: pieData,
+           options: options
+           }); 
+             
+    </script>
+</body>
+</html>
+
